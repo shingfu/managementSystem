@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--spring bean 容器  生产bean的配置文件-->
+<beans
+		xmlns="http://www.springframework.org/schema/beans"
+		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xmlns:p="http://www.springframework.org/schema/p"
+		xmlns:util="http://www.springframework.org/schema/util"
+		xmlns:tx="http://www.springframework.org/schema/tx"
+		xmlns:aop="http://www.springframework.org/schema/aop"
+		xmlns:context="http://www.springframework.org/schema/context"
+		xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-4.1.xsd
+    http://www.springframework.org/schema/util
+	http://www.springframework.org/schema/util/spring-util-4.1.xsd
+    http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/tx/spring-tx-4.1.xsd
+    http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/aop/spring-aop-4.1.xsd
+    http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+	<!--指定组件扫描的基础包名-->
+	<context:component-scan base-package="com.newer.dao,com.newer.service"/>
+
+	<!--开启注解支持配置-->
+	<context:annotation-config/>
+
+
+
+	<!--读取属性文件-->
+	<util:properties id="reader" location="classpath:mysql.properties"/>
+	<!--定义数据源:c3p0数据库连接池数据源-->
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="#{reader[driver]}"/>
+		<property name="jdbcUrl" value="#{reader[url]}"/>
+		<property name="user" value="#{reader[user]}"/>
+		<property name="password" value="#{reader[password]}"/>
+		<property name="initialPoolSize" value="3"/> <!--连接池初始连接数-->
+		<property name="maxPoolSize" value="10"/>    <!--当初始连接不够时,连接池允许最大连接数-->
+		<property name="minPoolSize" value="3"/>     <!--连接池最小连接数-->
+		<property name="maxIdleTime" value="120"/>   <!--连接池最大空闲时间,当空闲时间大于120s，则会被回收,直到达到最小连接数-->
+	</bean>
+
+	<!--指定MybatisMapper接口扫描的基础包-->
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="basePackage" value="com.newer.dao"/>
+	</bean>
+
+	<!--定义mybatis中SqlSessionFactory-->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="typeAliasesPackage" value="com.newer.domain"/>        <!--包的别名-->
+	</bean>
+
+	<!--声明式事务处理-->
+
+	<!--定义事务管理器-->
+	<bean class="org.springframework.jdbc.datasource.DataSourceTransactionManager" id="transactionManager">
+		<property name="dataSource" ref="dataSource"/>
+	</bean>
+
+	<!--开启事务注解驱动-->
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+
+</beans>
