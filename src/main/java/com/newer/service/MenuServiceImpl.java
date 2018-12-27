@@ -24,7 +24,7 @@ public class MenuServiceImpl implements MenuService {
     }
 
     @Override
-    public List<Menu> findSecond(int parentId) {
-        return menuMapper.findSecond(parentId);
+    public List<Menu> findSecond(int parentId,int roleId) {
+        return menuMapper.findSecond(parentId,roleId);
     }
 }

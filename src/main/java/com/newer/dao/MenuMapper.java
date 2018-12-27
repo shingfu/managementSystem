@@ -41,6 +41,6 @@ public interface MenuMapper {
             @Result(property = "linkUrl",column = "linkurl"),
             @Result(property = "status",column = "status"),
     })
-    @Select("SELECT menuid,name,linkurl FROM sys_menu m WHERE parentid=#{parentId} order by seq")
-    List<Menu> findSecond(@Param("parentId") int parentId);
+    @Select("SELECT menuid,NAME,linkurl FROM sys_menu WHERE parentid=#{parentId} AND menuid IN(SELECT menuid FROM role_menu WHERE roleid=#{roleId}) ORDER BY seq")
+    List<Menu> findSecond(@Param("parentId") int parentId,@Param("roleId") int roleId);
 }

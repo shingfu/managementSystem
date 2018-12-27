@@ -43,7 +43,7 @@ public class MenuController {
             //设置一级菜单对象
             fmenu.setTopMenu(menu);
             //按一级菜单编号查询二级菜单集合
-            List<Menu> mlist=menuService.findSecond(menu.getMenuId());
+            List<Menu> mlist=menuService.findSecond(menu.getMenuId(),showuser.getRoleId());
             fmenu.setSecondMenus(mlist);
             //将模块菜单添加到集合
             menus.add(fmenu);

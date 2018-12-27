@@ -10,7 +10,7 @@ public interface MenuService {
 
     List<Menu> findFirst(int roleId);
 
-    List<Menu> findSecond(int parentId);
+    List<Menu> findSecond(int parentId,int roleId);
 
 
 }
